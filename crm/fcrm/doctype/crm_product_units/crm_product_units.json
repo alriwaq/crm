@@ -14,7 +14,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Unit",
-   "options": "Units",
+   "options": "CRM Unit",
    "reqd": 1
   }
  ],

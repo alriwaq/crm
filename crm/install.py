@@ -325,12 +325,12 @@ def add_email_account_custom_field():
 
 
 def add_units_custom_fields():
-	if not frappe.get_meta("Units").has_field("product"):
-		click.secho("* Installing Custom Fields in Units")
+	if not frappe.get_meta("CRM Unit").has_field("product"):
+		click.secho("* Installing Custom Fields in CRM Unit")
 
 		create_custom_fields(
 			{
-				"Units": [
+				"CRM Unit": [
 					{
 						"fieldname": "product",
 						"fieldtype": "Link",
@@ -343,7 +343,7 @@ def add_units_custom_fields():
 			}
 		)
 
-		frappe.clear_cache(doctype="Units")
+		frappe.clear_cache(doctype="CRM Unit")
 
 
 def add_default_industries():

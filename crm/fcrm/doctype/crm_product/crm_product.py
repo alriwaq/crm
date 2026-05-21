@@ -32,9 +32,9 @@ class CRMProduct(Document):
 		self.sync_units()
 
 	def sync_units(self):
-		"""Keep the Units child table in sync with Units linked to this product."""
+		"""Keep the Units child table in sync with CRM Units linked to this product."""
 		linked_units = frappe.get_all(
-			"Units",
+			"CRM Unit",
 			filters={"product": self.name},
 			fields=["name"],
 			order_by="name asc",
