@@ -51,7 +51,7 @@
           <div class="text-p-sm text-ink-gray-5 truncate">
             {{
               __(
-                'Automatically update "Expected Deal Value" based on the total value of associated products in a deal',
+                'Automatically update "Expected Deal Value" based on the total value of associated projects in a deal',
               )
             }}
           </div>

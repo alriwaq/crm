@@ -23,7 +23,7 @@ def get_sales_data(site_info):
 		"CRM Industry",
 		"CRM Territory",
 		"CRM Lost Reason",
-		"CRM Product",
+		"CRM Project",
 		"CRM Form Script",
 		"CRM Fields Layout",
 		"CRM View Settings",

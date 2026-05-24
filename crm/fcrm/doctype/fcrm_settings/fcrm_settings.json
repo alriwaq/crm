@@ -118,7 +118,7 @@
   },
   {
    "default": "1",
-   "description": "Automatically update \"Expected Deal Value\" based on the total value of associated products in a deal",
+   "description": "Automatically update \"Expected Deal Value\" based on the total value of associated projects in a deal",
    "fieldname": "auto_update_expected_deal_value",
    "fieldtype": "Check",
    "label": "Auto update Expected Deal Value"

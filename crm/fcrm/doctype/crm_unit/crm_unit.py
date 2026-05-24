@@ -7,27 +7,27 @@ from frappe.model.document import Document
 
 class CRMUnit(Document):
 	def after_insert(self):
-		self._sync_to_product(None, self.get("product"))
+		self._sync_to_project(None, self.get("project"))
 
 	def on_update(self):
-		old_product = (
-			self._doc_before_save.get("product")
+		old_project = (
+			self._doc_before_save.get("project")
 			if getattr(self, "_doc_before_save", None)
 			else None
 		)
-		new_product = self.get("product")
-		self._sync_to_product(old_product, new_product)
+		new_project = self.get("project")
+		self._sync_to_project(old_project, new_project)
 
 	def on_trash(self):
-		product = self.get("product")
-		if product:
-			_remove_unit_from_product(self.name, product)
+		project = self.get("project")
+		if project:
+			_remove_unit_from_project(self.name, project)
 
-	def _sync_to_product(self, old_product, new_product):
-		if old_product and old_product != new_product:
-			_remove_unit_from_product(self.name, old_product)
-		if new_product:
-			_add_unit_to_product(self.name, new_product)
+	def _sync_to_project(self, old_project, new_project):
+		if old_project and old_project != new_project:
+			_remove_unit_from_project(self.name, old_project)
+		if new_project:
+			_add_unit_to_project(self.name, new_project)
 
 	@staticmethod
 	def default_list_data():
@@ -49,35 +49,35 @@ class CRMUnit(Document):
 		return {"columns": columns, "rows": rows}
 
 
-def _add_unit_to_product(unit_name, product_name):
-	"""Add a CRM Unit to a CRM Product's child table if not already present."""
-	if not frappe.db.exists("CRM Product", product_name):
+def _add_unit_to_project(unit_name, project_name):
+	"""Add a CRM Unit to a CRM Project's child table if not already present."""
+	if not frappe.db.exists("CRM Project", project_name):
 		return
 
 	already_linked = frappe.db.exists(
-		"CRM Product Units",
-		{"parent": product_name, "unit": unit_name, "parenttype": "CRM Product"},
+		"CRM Project Units",
+		{"parent": project_name, "unit": unit_name, "parenttype": "CRM Project"},
 	)
 	if already_linked:
 		return
 
-	row = frappe.new_doc("CRM Product Units")
+	row = frappe.new_doc("CRM Project Units")
 	row.unit = unit_name
-	row.parent = product_name
-	row.parenttype = "CRM Product"
+	row.parent = project_name
+	row.parenttype = "CRM Project"
 	row.parentfield = "units"
 	row.insert(ignore_permissions=True)
 
 
-def _remove_unit_from_product(unit_name, product_name):
-	"""Remove a CRM Unit from a CRM Product's child table."""
-	if not frappe.db.exists("CRM Product", product_name):
+def _remove_unit_from_project(unit_name, project_name):
+	"""Remove a CRM Unit from a CRM Project's child table."""
+	if not frappe.db.exists("CRM Project", project_name):
 		return
 
 	rows = frappe.get_all(
-		"CRM Product Units",
-		filters={"parent": product_name, "unit": unit_name, "parenttype": "CRM Product"},
+		"CRM Project Units",
+		filters={"parent": project_name, "unit": unit_name, "parenttype": "CRM Project"},
 		fields=["name"],
 	)
 	for row in rows:
-		frappe.delete_doc("CRM Product Units", row.name, ignore_permissions=True, force=True)
+		frappe.delete_doc("CRM Project Units", row.name, ignore_permissions=True, force=True)

@@ -5,7 +5,7 @@ import frappe
 from frappe.model.document import Document
 
 
-class CRMProducts(Document):
+class CRMProjects(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -22,8 +22,8 @@ class CRMProducts(Document):
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
-		product_code: DF.Link | None
-		product_name: DF.Data
+		project_code: DF.Link | None
+		project_name: DF.Data
 		qty: DF.Float
 		rate: DF.Currency
 	# end: auto-generated types
@@ -31,13 +31,13 @@ class CRMProducts(Document):
 	pass
 
 
-def create_product_details_script(doctype):
-	if not frappe.db.exists("CRM Form Script", "Product Details Script for " + doctype):
-		script = get_product_details_script(doctype)
+def create_project_details_script(doctype):
+	if not frappe.db.exists("CRM Form Script", "Project Details Script for " + doctype):
+		script = get_project_details_script(doctype)
 		frappe.get_doc(
 			{
 				"doctype": "CRM Form Script",
-				"name": "Product Details Script for " + doctype,
+				"name": "Project Details Script for " + doctype,
 				"dt": doctype,
 				"view": "Form",
 				"script": script,
@@ -47,7 +47,7 @@ def create_product_details_script(doctype):
 		).insert()
 
 
-def get_product_details_script(doctype):
+def get_project_details_script(doctype):
 	doctype_class = "class " + doctype.replace(" ", "")
 
 	return (
@@ -60,7 +60,7 @@ def get_product_details_script(doctype):
     let net_total = 0
     let discount_applied = false
 
-    this.doc.products.forEach((d) => {
+    this.doc.projects.forEach((d) => {
       total += d.amount
       net_total += d.net_amount
       if (d.discount_percentage > 0) {
@@ -77,27 +77,27 @@ def get_product_details_script(doctype):
   }
 }
 
-class CRMProducts {
-  products_add() {
-    let row = this.doc.getRow('products')
+class CRMProjects {
+  projects_add() {
+    let row = this.doc.getRow('projects')
     row.trigger('qty')
     this.doc.trigger('update_total')
   }
 
-  products_remove() {
+  projects_remove() {
     this.doc.trigger('update_total')
   }
 
-  async product_code(idx) {
-    let row = this.doc.getRow('products', idx)
+  async project_code(idx) {
+    let row = this.doc.getRow('projects', idx)
 
     let a = await call("frappe.client.get_value", {
-        doctype: "CRM Product",
-        filters: { name: row.product_code },
-        fieldname: ["product_name", "standard_rate"],
+        doctype: "CRM Project",
+        filters: { name: row.project_code },
+        fieldname: ["project_name", "standard_rate"],
     })
 
-    row.product_name = a.product_name
+    row.project_name = a.project_name
     if (a.standard_rate && !row.rate) {
         row.rate = a.standard_rate
         row.trigger("rate")
@@ -105,19 +105,19 @@ class CRMProducts {
   }
 
   qty(idx) {
-    let row = this.doc.getRow('products', idx)
+    let row = this.doc.getRow('projects', idx)
     row.amount = row.qty * row.rate
     row.trigger('discount_percentage', idx)
   }
 
   rate() {
-    let row = this.doc.getRow('products')
+    let row = this.doc.getRow('projects')
     row.amount = row.qty * row.rate
     row.trigger('discount_percentage')
   }
 
   discount_percentage(idx) {
-    let row = this.doc.getRow('products', idx)
+    let row = this.doc.getRow('projects', idx)
     if (!row.discount_percentage) {
       row.net_amount = row.amount
       row.discount_amount = 0

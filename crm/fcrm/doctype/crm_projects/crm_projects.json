@@ -6,9 +6,9 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "product_code",
+  "project_code",
   "column_break_gvbc",
-  "product_name",
+  "project_name",
   "section_break_fnvf",
   "qty",
   "column_break_ajac",
@@ -30,9 +30,9 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "product_name",
+   "fieldname": "project_name",
    "fieldtype": "Data",
-   "label": "Product Name",
+   "label": "Project Name",
    "reqd": 1
   },
   {
@@ -95,11 +95,11 @@
   {
    "bold": 1,
    "columns": 5,
-   "fieldname": "product_code",
+   "fieldname": "project_code",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Product",
-   "options": "CRM Product"
+   "label": "Project",
+   "options": "CRM Project"
   },
   {
    "bold": 1,
@@ -134,7 +134,7 @@
  "modified": "2026-02-23 12:14:43.798967",
  "modified_by": "Administrator",
  "module": "FCRM",
- "name": "CRM Products",
+ "name": "CRM Projects",
  "owner": "Administrator",
  "permissions": [],
  "row_format": "Dynamic",

@@ -6,8 +6,8 @@ describe('getClassNames', () => {
   })
 
   it('extracts multiple class names', () => {
-    const script = 'class CRMDeal { }\nclass CRMProducts { }'
-    expect(getClassNames(script)).toEqual(['CRMDeal', 'CRMProducts'])
+    const script = 'class CRMDeal { }\nclass CRMProjects { }'
+    expect(getClassNames(script)).toEqual(['CRMDeal', 'CRMProjects'])
   })
 
   it('handles class with extends', () => {
@@ -51,9 +51,9 @@ describe('getClassNames', () => {
       // class Skipped1 { }
       class CRMDeal { }
       /* class Skipped2 { } */
-      class CRMProducts { }
+      class CRMProjects { }
     `
-    expect(getClassNames(script)).toEqual(['CRMDeal', 'CRMProducts'])
+    expect(getClassNames(script)).toEqual(['CRMDeal', 'CRMProjects'])
   })
 })
 

@@ -11,18 +11,18 @@ EXTRA_TEST_RECORD_DEPENDENCIES = []  # eg. ["User"]
 IGNORE_TEST_RECORD_DEPENDENCIES = []  # eg. ["User"]
 
 
-class UnitTestCRMProduct(UnitTestCase):
+class UnitTestCRMProject(UnitTestCase):
 	"""
-	Unit tests for CRMProduct.
+	Unit tests for CRMProject.
 	Use this class for testing individual functions and methods.
 	"""
 
 	pass
 
 
-class IntegrationTestCRMProduct(IntegrationTestCase):
+class IntegrationTestCRMProject(IntegrationTestCase):
 	"""
-	Integration tests for CRMProduct.
+	Integration tests for CRMProject.
 	Use this class for testing interactions between multiple components.
 	"""
 

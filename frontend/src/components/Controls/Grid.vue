@@ -555,7 +555,7 @@ provide('parentFieldname', props.parentFieldname)
 
 /**
  * Resolve field overrides for a specific row.
- * Priority: row-specific (products.qty:row_name) > column-level (products.qty) > base meta
+ * Priority: row-specific (projects.qty:row_name) > column-level (projects.qty) > base meta
  */
 function getRowFieldObj(field, row) {
   const ov = parentFieldPropertyOverrides.value || {}

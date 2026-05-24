@@ -1,41 +1,41 @@
 <template>
   <LayoutHeader>
     <template #left-header>
-      <ViewBreadcrumbs v-model="viewControls" routeName="Products" />
+      <ViewBreadcrumbs v-model="viewControls" routeName="Projects" />
     </template>
     <template #right-header>
       <CustomActions
-        v-if="productsListView?.customListActions"
-        :actions="productsListView.customListActions"
+        v-if="projectsListView?.customListActions"
+        :actions="projectsListView.customListActions"
       />
       <Button
         variant="solid"
         :label="__('Create')"
         iconLeft="plus"
-        @click="showProductModal = true"
+        @click="showProjectModal = true"
       />
     </template>
   </LayoutHeader>
   <ViewControls
     ref="viewControls"
-    v-model="products"
+    v-model="projects"
     v-model:loadMore="loadMore"
     v-model:resizeColumn="triggerResize"
     v-model:updatedPageCount="updatedPageCount"
-    doctype="CRM Product"
+    doctype="CRM Project"
   />
-  <ProductsListView
-    v-if="products.data && rows.length"
-    ref="productsListView"
-    v-model="products.data.page_length_count"
-    v-model:list="products"
+  <ProjectsListView
+    v-if="projects.data && rows.length"
+    ref="projectsListView"
+    v-model="projects.data.page_length_count"
+    v-model:list="projects"
     :rows="rows"
     :columns="columns"
     :options="{
       showTooltip: false,
       resizeColumn: true,
-      rowCount: products.data.row_count,
-      totalCount: products.data.total_count,
+      rowCount: projects.data.row_count,
+      totalCount: projects.data.total_count,
     }"
     @loadMore="() => loadMore++"
     @columnWidthUpdated="() => triggerResize++"
@@ -48,23 +48,23 @@
     "
   />
   <EmptyState
-    v-else-if="products.data && !rows.length"
-    name="Products"
-    :icon="ProductsIcon"
+    v-else-if="projects.data && !rows.length"
+    name="Projects"
+    :icon="ProjectsIcon"
   />
-  <ProductModal
-    v-if="showProductModal"
-    v-model="showProductModal"
+  <ProjectModal
+    v-if="showProjectModal"
+    v-model="showProjectModal"
   />
 </template>
 
 <script setup>
 import ViewBreadcrumbs from '@/components/ViewBreadcrumbs.vue'
 import CustomActions from '@/components/CustomActions.vue'
-import ProductsIcon from '@/components/Icons/ProductsIcon.vue'
+import ProjectsIcon from '@/components/Icons/ProjectsIcon.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
-import ProductModal from '@/components/Modals/ProductModal.vue'
-import ProductsListView from '@/components/ListViews/ProductsListView.vue'
+import ProjectModal from '@/components/Modals/ProjectModal.vue'
+import ProjectsListView from '@/components/ListViews/ProjectsListView.vue'
 import EmptyState from '@/components/ListViews/EmptyState.vue'
 import ViewControls from '@/components/ViewControls.vue'
 import { getMeta } from '@/stores/meta'
@@ -72,28 +72,28 @@ import { formatDate, timeAgo } from '@/utils'
 import { ref, computed } from 'vue'
 
 const { getFormattedPercent, getFormattedFloat, getFormattedCurrency } =
-  getMeta('CRM Product')
+  getMeta('CRM Project')
 
-const productsListView = ref(null)
-const showProductModal = ref(false)
+const projectsListView = ref(null)
+const showProjectModal = ref(false)
 
-// products data is loaded in the ViewControls component
-const products = ref({})
+// projects data is loaded in the ViewControls component
+const projects = ref({})
 const loadMore = ref(1)
 const triggerResize = ref(1)
 const updatedPageCount = ref(20)
 const viewControls = ref(null)
 
 const rows = computed(() => {
-  if (!products.value?.data?.data) return []
-  const viewType = products.value.data.view_type
+  if (!projects.value?.data?.data) return []
+  const viewType = projects.value.data.view_type
   if (viewType && !['list', 'group_by'].includes(viewType)) return []
-  return products.value.data.data.map((product) => {
-    let _rows = { name: product.name }
-    products.value.data.rows.forEach((row) => {
-      _rows[row] = product[row]
+  return projects.value.data.data.map((project) => {
+    let _rows = { name: project.name }
+    projects.value.data.rows.forEach((row) => {
+      _rows[row] = project[row]
 
-      let fieldType = products.value.data.columns?.find(
+      let fieldType = projects.value.data.columns?.find(
         (col) => (col.key || col.value) == row,
       )?.type
 
@@ -103,7 +103,7 @@ const rows = computed(() => {
         !['modified', 'creation'].includes(row)
       ) {
         _rows[row] = formatDate(
-          product[row],
+          project[row],
           '',
           true,
           fieldType == 'Datetime',
@@ -111,25 +111,25 @@ const rows = computed(() => {
       }
 
       if (fieldType && fieldType == 'Currency') {
-        _rows[row] = getFormattedCurrency(row, product)
+        _rows[row] = getFormattedCurrency(row, project)
       }
 
       if (fieldType && fieldType == 'Float') {
-        _rows[row] = getFormattedFloat(row, product)
+        _rows[row] = getFormattedFloat(row, project)
       }
 
       if (fieldType && fieldType == 'Percent') {
-        _rows[row] = getFormattedPercent(row, product)
+        _rows[row] = getFormattedPercent(row, project)
       }
 
-      if (['product_code', 'product_name'].includes(row)) {
+      if (['project_code', 'project_name'].includes(row)) {
         _rows[row] = {
-          label: product[row],
+          label: project[row],
         }
       } else if (['modified', 'creation'].includes(row)) {
         _rows[row] = {
-          label: formatDate(product[row]),
-          timeAgo: __(timeAgo(product[row])),
+          label: formatDate(project[row]),
+          timeAgo: __(timeAgo(project[row])),
         }
       }
     })
@@ -138,7 +138,7 @@ const rows = computed(() => {
 })
 
 const columns = computed(() => {
-  let _columns = products.value?.data?.columns || []
+  let _columns = projects.value?.data?.columns || []
 
   if (_columns.length) {
     _columns = _columns.map((col, index) => {

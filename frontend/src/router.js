@@ -43,15 +43,15 @@ const routes = [
     props: true,
   },
   {
-    alias: '/products',
-    path: '/products/view/:viewType?',
-    name: 'Products',
-    component: () => import('@/pages/Products.vue'),
+    alias: '/projects',
+    path: '/projects/view/:viewType?',
+    name: 'Projects',
+    component: () => import('@/pages/Projects.vue'),
   },
   {
-    path: '/products/:productId',
-    name: 'Product',
-    component: () => import('@/pages/Product.vue'),
+    path: '/projects/:projectId',
+    name: 'Project',
+    component: () => import('@/pages/Project.vue'),
     props: true,
   },
   {
@@ -207,7 +207,7 @@ router.beforeEach(async (to, from, next) => {
     [
       'Leads',
       'Deals',
-      'Products',
+      'Projects',
       'Units',
       'Contacts',
       'Organizations',
@@ -227,7 +227,7 @@ router.beforeEach(async (to, from, next) => {
       const doctypeMap = {
         Leads: 'CRM Lead',
         Deals: 'CRM Deal',
-        Products: 'CRM Product',
+        Projects: 'CRM Project',
         Units: 'Units',
         Contacts: 'Contact',
         Organizations: 'CRM Organization',

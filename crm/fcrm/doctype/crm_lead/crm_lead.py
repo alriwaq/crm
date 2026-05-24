@@ -25,7 +25,7 @@ class CRMLead(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		from crm.fcrm.doctype.crm_products.crm_products import CRMProducts
+		from crm.fcrm.doctype.crm_projects.crm_projects import CRMProjects
 		from crm.fcrm.doctype.crm_rolling_response_time.crm_rolling_response_time import (
 			CRMRollingResponseTime,
 		)
@@ -58,7 +58,7 @@ class CRMLead(Document):
 		no_of_employees: DF.Literal["1-10", "11-50", "51-200", "201-500", "501-1000", "1000+"]
 		organization: DF.Data | None
 		phone: DF.Data | None
-		products: DF.Table[CRMProducts]
+		projects: DF.Table[CRMProjects]
 		response_by: DF.Datetime | None
 		rolling_responses: DF.Table[CRMRollingResponseTime]
 		salutation: DF.Link | None
@@ -97,13 +97,13 @@ class CRMLead(Document):
 
 	def before_save(self):
 		self.apply_sla()
-		self.fill_product_rates()
+		self.fill_project_rates()
 
-	def fill_product_rates(self):
-		"""Auto-populate rate from CRM Product.standard_rate when rate is missing."""
-		for row in self.get("products") or []:
-			if row.product_code and not row.rate:
-				row.rate = frappe.db.get_value("CRM Product", row.product_code, "standard_rate") or 0
+	def fill_project_rates(self):
+		"""Auto-populate rate from CRM Project.standard_rate when rate is missing."""
+		for row in self.get("projects") or []:
+			if row.project_code and not row.rate:
+				row.rate = frappe.db.get_value("CRM Project", row.project_code, "standard_rate") or 0
 
 	def validate_status(self):
 		if self.is_new() and not self.status:

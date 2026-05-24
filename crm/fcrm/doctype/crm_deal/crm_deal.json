@@ -49,8 +49,8 @@
   "mobile_no",
   "phone",
   "gender",
-  "products_tab",
-  "products",
+  "projects_tab",
+  "projects",
   "section_break_ccbj",
   "total",
   "column_break_udbq",
@@ -354,15 +354,15 @@
    "options": "Currency"
   },
   {
-   "fieldname": "products_tab",
+   "fieldname": "projects_tab",
    "fieldtype": "Tab Break",
-   "label": "Products"
+   "label": "Projects"
   },
   {
-   "fieldname": "products",
+   "fieldname": "projects",
    "fieldtype": "Table",
-   "label": "Products",
-   "options": "CRM Products"
+   "label": "Projects",
+   "options": "CRM Projects"
   },
   {
    "fieldname": "section_break_ccbj",

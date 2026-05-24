@@ -7,7 +7,7 @@ import frappe
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
 from crm.fcrm.doctype.crm_dashboard.crm_dashboard import create_default_manager_dashboard
-from crm.fcrm.doctype.crm_products.crm_products import create_product_details_script
+from crm.fcrm.doctype.crm_projects.crm_projects import create_project_details_script
 
 
 def before_install():
@@ -219,7 +219,7 @@ def add_default_fields_layout(force=False):
 		},
 		"CRM Deal-Data Fields": {
 			"doctype": "CRM Deal",
-			"layout": '[{"name":"first_tab","sections":[{"label":"Details","name":"details_section","opened":true,"columns":[{"name":"column_z9XL","fields":["organization","annual_revenue","next_step"]},{"name":"column_gM4w","fields":["website","closed_date","deal_owner"]},{"name":"column_gWmE","fields":["territory","probability"]}]},{"label":"Products","name":"section_jHhQ","opened":true,"columns":[{"name":"column_xiNF","fields":["products"]}],"editingLabel":false,"hideLabel":true},{"label":"New Section","name":"section_WNOQ","opened":true,"columns":[{"name":"column_ziBW","fields":["total"]},{"label":"","name":"column_wuwA","fields":["net_total"]}],"hideBorder":true,"hideLabel":true}]}]',
+			"layout": '[{"name":"first_tab","sections":[{"label":"Details","name":"details_section","opened":true,"columns":[{"name":"column_z9XL","fields":["organization","annual_revenue","next_step"]},{"name":"column_gM4w","fields":["website","closed_date","deal_owner"]},{"name":"column_gWmE","fields":["territory","probability"]}]},{"label":"Projects","name":"section_jHhQ","opened":true,"columns":[{"name":"column_xiNF","fields":["projects"]}],"editingLabel":false,"hideLabel":true},{"label":"New Section","name":"section_WNOQ","opened":true,"columns":[{"name":"column_ziBW","fields":["total"]},{"label":"","name":"column_wuwA","fields":["net_total"]}],"hideBorder":true,"hideLabel":true}]}]',
 		},
 	}
 
@@ -325,17 +325,17 @@ def add_email_account_custom_field():
 
 
 def add_units_custom_fields():
-	if not frappe.get_meta("CRM Unit").has_field("product"):
+	if not frappe.get_meta("CRM Unit").has_field("project"):
 		click.secho("* Installing Custom Fields in CRM Unit")
 
 		create_custom_fields(
 			{
 				"CRM Unit": [
 					{
-						"fieldname": "product",
+						"fieldname": "project",
 						"fieldtype": "Link",
-						"label": "Product",
-						"options": "CRM Product",
+						"label": "Project",
+						"options": "CRM Project",
 						"insert_after": "title",
 						"in_list_view": 1,
 					}
@@ -362,7 +362,7 @@ def add_default_industries():
 		"Chemical",
 		"Computer",
 		"Consulting",
-		"Consumer Products",
+		"Consumer Projects",
 		"Cosmetics",
 		"Defense",
 		"Department Stores",
@@ -442,14 +442,14 @@ def add_default_lost_reasons():
 			"reason": "Pricing",
 			"description": "The prospect found the pricing to be too high or not competitive.",
 		},
-		{"reason": "Competition", "description": "The prospect chose a competitor's product or service."},
+		{"reason": "Competition", "description": "The prospect chose a competitor's project or service."},
 		{
 			"reason": "Budget Constraints",
 			"description": "The prospect did not have the budget to proceed with the purchase.",
 		},
 		{
 			"reason": "Missing Features",
-			"description": "The prospect felt that the product or service was missing key features they needed.",
+			"description": "The prospect felt that the project or service was missing key features they needed.",
 		},
 		{
 			"reason": "Long Sales Cycle",
@@ -460,7 +460,7 @@ def add_default_lost_reasons():
 			"description": "The prospect was not the decision-maker and could not proceed.",
 		},
 		{"reason": "Unresponsive Prospect", "description": "The prospect did not respond to follow-ups."},
-		{"reason": "Poor Fit", "description": "The prospect was not a good fit for the product or service."},
+		{"reason": "Poor Fit", "description": "The prospect was not a good fit for the project or service."},
 		{"reason": "Other", "description": ""},
 	]
 
@@ -513,7 +513,7 @@ def add_default_scripts():
 	from crm.fcrm.doctype.fcrm_settings.fcrm_settings import create_forecasting_script
 
 	for doctype in ["CRM Lead", "CRM Deal"]:
-		create_product_details_script(doctype)
+		create_project_details_script(doctype)
 	create_forecasting_script()
 
 

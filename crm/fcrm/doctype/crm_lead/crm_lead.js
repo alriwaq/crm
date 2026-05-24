@@ -9,7 +9,7 @@ frappe.ui.form.on("CRM Lead", {
     let total = 0;
     let total_qty = 0;
     let net_total = 0;
-    frm.doc.products.forEach((d) => {
+    frm.doc.projects.forEach((d) => {
       total += d.amount;
       total_qty += d.qty;
       net_total += d.net_amount;
@@ -25,16 +25,16 @@ frappe.ui.form.on("CRM Lead", {
   },
 });
 
-frappe.ui.form.on("CRM Products", {
-  products_add: function (frm, cdt, cdn) {
+frappe.ui.form.on("CRM Projects", {
+  projects_add: function (frm, cdt, cdn) {
     frm.trigger("update_total");
   },
-  products_remove: function (frm, cdt, cdn) {
+  projects_remove: function (frm, cdt, cdn) {
     frm.trigger("update_total");
   },
-  product_code: function (frm, cdt, cdn) {
+  project_code: function (frm, cdt, cdn) {
     let d = frappe.get_doc(cdt, cdn);
-    frappe.model.set_value(cdt, cdn, "product_name", d.product_code);
+    frappe.model.set_value(cdt, cdn, "project_name", d.project_code);
   },
   rate: function (frm, cdt, cdn) {
     let d = frappe.get_doc(cdt, cdn);

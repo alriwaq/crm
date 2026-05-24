@@ -4,8 +4,8 @@
     :rows="rows"
     :options="{
       getRowRoute: (row) => ({
-        name: 'Product',
-        params: { productId: row.name },
+        name: 'Project',
+        params: { projectId: row.name },
         query: { view: route.query.view, viewType: route.params.viewType },
       }),
       selectable: options.selectable,
@@ -40,7 +40,7 @@
       v-slot="{ idx, column, item, row }"
       class="mx-3 sm:mx-5"
       :rows="rows"
-      doctype="CRM Product"
+      doctype="CRM Project"
     >
       <ListRowItem :item="item" :align="column.align" class="overflow-hidden">
         <template #default="{ label }">
@@ -123,7 +123,7 @@
   <ListBulkActions
     ref="listBulkActionsRef"
     v-model="list"
-    doctype="CRM Product"
+    doctype="CRM Project"
   />
 </template>
 

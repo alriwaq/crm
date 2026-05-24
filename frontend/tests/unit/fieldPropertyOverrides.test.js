@@ -146,15 +146,15 @@ describe('fieldPropertyOverrides map operations', () => {
 
   it('handles dot notation for child table fields', () => {
     const ctx = createCtx()
-    setFieldProperty(ctx, 'products.qty', 'read_only', true)
-    expect(ctx.fieldPropertyOverrides['products.qty'].read_only).toBe(true)
+    setFieldProperty(ctx, 'projects.qty', 'read_only', true)
+    expect(ctx.fieldPropertyOverrides['projects.qty'].read_only).toBe(true)
   })
 
   it('removes dot notation overrides', () => {
     const ctx = createCtx()
-    setFieldProperty(ctx, 'products.qty', 'read_only', true)
-    removeFieldProperty(ctx, 'products.qty', 'read_only')
-    expect(ctx.fieldPropertyOverrides['products.qty']).toBeUndefined()
+    setFieldProperty(ctx, 'projects.qty', 'read_only', true)
+    removeFieldProperty(ctx, 'projects.qty', 'read_only')
+    expect(ctx.fieldPropertyOverrides['projects.qty']).toBeUndefined()
   })
 
   // ─── Section and tab names ────────────────────────────────────
@@ -189,40 +189,40 @@ describe('fieldPropertyOverrides map operations', () => {
 
   it('sets per-row override with rowName', () => {
     const ctx = createCtx()
-    setFieldProperty(ctx, 'products.qty', 'read_only', true, 'row_abc')
-    expect(ctx.fieldPropertyOverrides['products.qty:row_abc'].read_only).toBe(
+    setFieldProperty(ctx, 'projects.qty', 'read_only', true, 'row_abc')
+    expect(ctx.fieldPropertyOverrides['projects.qty:row_abc'].read_only).toBe(
       true,
     )
   })
 
   it('per-row and column-level overrides coexist', () => {
     const ctx = createCtx()
-    setFieldProperty(ctx, 'products.qty', 'read_only', true)
-    setFieldProperty(ctx, 'products.qty', 'read_only', false, 'row_abc')
-    expect(ctx.fieldPropertyOverrides['products.qty'].read_only).toBe(true)
-    expect(ctx.fieldPropertyOverrides['products.qty:row_abc'].read_only).toBe(
+    setFieldProperty(ctx, 'projects.qty', 'read_only', true)
+    setFieldProperty(ctx, 'projects.qty', 'read_only', false, 'row_abc')
+    expect(ctx.fieldPropertyOverrides['projects.qty'].read_only).toBe(true)
+    expect(ctx.fieldPropertyOverrides['projects.qty:row_abc'].read_only).toBe(
       false,
     )
   })
 
   it('removes per-row override independently', () => {
     const ctx = createCtx()
-    setFieldProperty(ctx, 'products.qty', 'read_only', true)
-    setFieldProperty(ctx, 'products.qty', 'read_only', false, 'row_abc')
-    removeFieldProperty(ctx, 'products.qty', 'read_only', 'row_abc')
-    expect(ctx.fieldPropertyOverrides['products.qty:row_abc']).toBeUndefined()
-    expect(ctx.fieldPropertyOverrides['products.qty'].read_only).toBe(true)
+    setFieldProperty(ctx, 'projects.qty', 'read_only', true)
+    setFieldProperty(ctx, 'projects.qty', 'read_only', false, 'row_abc')
+    removeFieldProperty(ctx, 'projects.qty', 'read_only', 'row_abc')
+    expect(ctx.fieldPropertyOverrides['projects.qty:row_abc']).toBeUndefined()
+    expect(ctx.fieldPropertyOverrides['projects.qty'].read_only).toBe(true)
   })
 
   it('batch set with per-row', () => {
     const ctx = createCtx()
     setFieldProperties(
       ctx,
-      'products.rate',
+      'projects.rate',
       { read_only: true, label: 'Fixed Rate' },
       'row_xyz',
     )
-    expect(ctx.fieldPropertyOverrides['products.rate:row_xyz']).toEqual({
+    expect(ctx.fieldPropertyOverrides['projects.rate:row_xyz']).toEqual({
       read_only: true,
       label: 'Fixed Rate',
     })

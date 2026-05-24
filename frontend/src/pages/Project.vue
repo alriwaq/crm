@@ -1,17 +1,17 @@
 <template>
-  <LayoutHeader v-if="product.doc">
+  <LayoutHeader v-if="project.doc">
     <template #left-header>
       <Breadcrumbs
         :items="[
-          { label: __('Products'), route: { name: 'Products' } },
-          { label: product.doc.product_name || product.doc.product_code || productId },
+          { label: __('Projects'), route: { name: 'Projects' } },
+          { label: project.doc.project_name || project.doc.project_code || projectId },
         ]"
       />
     </template>
     <template #right-header>
       <CustomActions
-        v-if="product._actions?.length"
-        :actions="product._actions"
+        v-if="project._actions?.length"
+        :actions="project._actions"
       />
       <Button
         v-if="isManager() && !isMobileView"
@@ -28,30 +28,30 @@
       <Button
         variant="solid"
         :label="__('Save')"
-        :loading="product.save?.loading"
-        @click="saveProduct"
+        :loading="project.save?.loading"
+        @click="saveProject"
       />
     </template>
   </LayoutHeader>
   <div
-    v-if="product.doc"
+    v-if="project.doc"
     class="flex flex-1 flex-col overflow-y-auto p-6"
   >
     <div class="mx-auto w-full max-w-3xl">
       <FieldLayout
         v-if="tabs.data?.length"
         :tabs="tabs.data"
-        :data="product.doc"
-        doctype="CRM Product"
+        :data="project.doc"
+        doctype="CRM Project"
       />
       <ErrorMessage v-if="error" class="mt-4" :message="__(error)" />
     </div>
   </div>
   <UnitModal
     v-model="showUnitModal"
-    :defaults="{ product: productId }"
+    :defaults="{ project: projectId }"
     :redirect="false"
-    @created="product.reload()"
+    @created="project.reload()"
   />
 </template>
 
@@ -69,23 +69,23 @@ import { Breadcrumbs, createResource, toast } from 'frappe-ui'
 import { ref } from 'vue'
 
 const props = defineProps({
-  productId: { type: String, required: true },
+  projectId: { type: String, required: true },
 })
 
 const { isManager } = usersStore()
 const error = ref(null)
 const showUnitModal = ref(false)
 
-const { document: product } = useDocument('CRM Product', props.productId)
+const { document: project } = useDocument('CRM Project', props.projectId)
 
-function saveProduct() {
+function saveProject() {
   error.value = null
-  product.save.submit(null, {
+  project.save.submit(null, {
     onSuccess: () => {
-      toast.success(__('Product saved'))
+      toast.success(__('Project saved'))
     },
     onError: (err) => {
-      error.value = err.messages?.[0] || __('Error saving product')
+      error.value = err.messages?.[0] || __('Error saving project')
       toast.error(error.value)
     },
   })
@@ -93,13 +93,13 @@ function saveProduct() {
 
 const tabs = createResource({
   url: 'crm.fcrm.doctype.crm_fields_layout.crm_fields_layout.get_fields_layout',
-  cache: ['QuickEntry', 'CRM Product'],
-  params: { doctype: 'CRM Product', type: 'Quick Entry' },
+  cache: ['QuickEntry', 'CRM Project'],
+  params: { doctype: 'CRM Project', type: 'Quick Entry' },
   auto: true,
 })
 
 function openQuickEntryModal() {
   showQuickEntryModal.value = true
-  quickEntryProps.value = { doctype: 'CRM Product' }
+  quickEntryProps.value = { doctype: 'CRM Project' }
 }
 </script>

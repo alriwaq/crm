@@ -5,7 +5,7 @@
         <div class="flex items-center justify-between mb-5">
           <div>
             <h3 class="text-2xl font-semibold leading-6 text-ink-gray-9">
-              {{ __('New Product') }}
+              {{ __('New Project') }}
             </h3>
           </div>
           <div class="flex items-center gap-1">
@@ -28,8 +28,8 @@
         <FieldLayout
           v-if="tabs.data?.length"
           :tabs="tabs.data"
-          :data="product.doc"
-          doctype="CRM Product"
+          :data="project.doc"
+          doctype="CRM Project"
         />
         <ErrorMessage v-if="error" class="mt-4" :message="__(error)" />
       </div>
@@ -39,7 +39,7 @@
             variant="solid"
             :label="__('Create')"
             :loading="_create.loading"
-            @click="createProduct"
+            @click="createProject"
           />
         </div>
       </div>
@@ -68,14 +68,14 @@ const { isManager } = usersStore()
 const router = useRouter()
 const error = ref(null)
 
-const { document: product, triggerOnBeforeCreate } = useDocument('CRM Product')
+const { document: project, triggerOnBeforeCreate } = useDocument('CRM Project')
 
 const _create = createResource({
   url: 'frappe.client.insert',
   onSuccess: (d) => {
-    product.doc = {}
+    project.doc = {}
     show.value = false
-    router.push({ name: 'Product', params: { productId: d.name } })
+    router.push({ name: 'Project', params: { projectId: d.name } })
   },
   onError: (err) => {
     if (err.exc_type == 'MandatoryError') {
@@ -88,38 +88,38 @@ const _create = createResource({
       error.value = __('Please fill the mandatory fields: {0}', [fieldName])
       return
     }
-    error.value = err.messages?.[0] || __('Could not create product')
+    error.value = err.messages?.[0] || __('Could not create project')
   },
 })
 
-async function createProduct() {
+async function createProject() {
   error.value = null
   await triggerOnBeforeCreate?.()
   _create.submit({
     doc: {
-      doctype: 'CRM Product',
-      ...product.doc,
+      doctype: 'CRM Project',
+      ...project.doc,
     },
   })
 }
 
 const tabs = createResource({
   url: 'crm.fcrm.doctype.crm_fields_layout.crm_fields_layout.get_fields_layout',
-  cache: ['QuickEntry', 'CRM Product'],
-  params: { doctype: 'CRM Product', type: 'Quick Entry' },
+  cache: ['QuickEntry', 'CRM Project'],
+  params: { doctype: 'CRM Project', type: 'Quick Entry' },
   auto: true,
 })
 
 onMounted(() => {
-  product.doc = {
-    ...product.doc,
+  project.doc = {
+    ...project.doc,
     ...props.defaults,
   }
 })
 
 function openQuickEntryModal() {
   showQuickEntryModal.value = true
-  quickEntryProps.value = { doctype: 'CRM Product' }
+  quickEntryProps.value = { doctype: 'CRM Project' }
   nextTick(() => (show.value = false))
 }
 </script>
