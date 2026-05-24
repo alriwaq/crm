@@ -30,7 +30,7 @@
       v-slot="{ idx, column, item }"
       class="mx-3 sm:mx-5"
       :rows="rows"
-      doctype="Units"
+      doctype="CRM Unit"
     >
       <ListRowItem :item="item" :align="column.align" class="overflow-hidden">
         <template #default="{ label }">
@@ -101,7 +101,7 @@
   <ListBulkActions
     ref="listBulkActionsRef"
     v-model="list"
-    doctype="Units"
+    doctype="CRM Unit"
   />
 </template>
 

@@ -22,7 +22,7 @@
     v-model:loadMore="loadMore"
     v-model:resizeColumn="triggerResize"
     v-model:updatedPageCount="updatedPageCount"
-    doctype="Units"
+    doctype="CRM Unit"
   />
   <UnitsListView
     v-if="units.data && rows.length"
