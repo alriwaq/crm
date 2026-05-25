@@ -228,7 +228,7 @@ router.beforeEach(async (to, from, next) => {
         Leads: 'CRM Lead',
         Deals: 'CRM Deal',
         Projects: 'CRM Project',
-        Units: 'CRM Unit',
+        Units: 'Units',
         Contacts: 'Contact',
         Organizations: 'CRM Organization',
         Notes: 'FCRM Note',

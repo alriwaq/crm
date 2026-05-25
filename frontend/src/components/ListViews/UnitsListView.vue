@@ -30,9 +30,7 @@
       v-slot="{ idx, column, item }"
       class="mx-3 sm:mx-5"
       :rows="rows"
-      doctype="CRM Unit"
-    >
-      <ListRowItem :item="item" :align="column.align" class="overflow-hidden">
+      doctype="Units"
         <template #default="{ label }">
           <div
             v-if="['modified', 'creation'].includes(column.key)"
@@ -101,8 +99,7 @@
   <ListBulkActions
     ref="listBulkActionsRef"
     v-model="list"
-    doctype="CRM Unit"
-  />
+    doctype="Units"
 </template>
 
 <script setup>
