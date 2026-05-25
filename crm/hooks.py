@@ -153,6 +153,12 @@ doc_events = {
 	"Contact": {
 		"validate": ["crm.api.contact.validate"],
 	},
+	"Units": {
+		"after_insert": ["crm.api.units.after_insert"],
+		"on_update": ["crm.api.units.on_update"],
+		"on_submit": ["crm.api.units.on_submit"],
+		"on_trash": ["crm.api.units.on_trash"],
+	},
 	"ToDo": {
 		"after_insert": ["crm.api.todo.after_insert"],
 		"on_update": ["crm.api.todo.on_update"],

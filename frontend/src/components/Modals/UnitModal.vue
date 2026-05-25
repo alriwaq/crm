@@ -29,7 +29,7 @@
           v-if="tabs.data?.length"
           :tabs="tabs.data"
           :data="unit.doc"
-          doctype="CRM Unit"
+          doctype="Units"
         />
         <ErrorMessage v-if="error" class="mt-4" :message="__(error)" />
       </div>
@@ -71,7 +71,7 @@ const { isManager } = usersStore()
 const router = useRouter()
 const error = ref(null)
 
-const { document: unit, triggerOnBeforeCreate } = useDocument('CRM Unit')
+const { document: unit, triggerOnBeforeCreate } = useDocument('Units')
 
 const _create = createResource({
   url: 'frappe.client.insert',
@@ -103,7 +103,7 @@ async function createUnit() {
   await triggerOnBeforeCreate?.()
   _create.submit({
     doc: {
-      doctype: 'CRM Unit',
+      doctype: 'Units',
       ...unit.doc,
     },
   })
@@ -111,8 +111,8 @@ async function createUnit() {
 
 const tabs = createResource({
   url: 'crm.fcrm.doctype.crm_fields_layout.crm_fields_layout.get_fields_layout',
-  cache: ['QuickEntry', 'CRM Unit'],
-  params: { doctype: 'CRM Unit', type: 'Quick Entry' },
+  cache: ['QuickEntry', 'Units'],
+  params: { doctype: 'Units', type: 'Quick Entry' },
   auto: true,
 })
 
@@ -125,7 +125,7 @@ onMounted(() => {
 
 function openQuickEntryModal() {
   showQuickEntryModal.value = true
-  quickEntryProps.value = { doctype: 'CRM Unit' }
+  quickEntryProps.value = { doctype: 'Units' }
   nextTick(() => (show.value = false))
 }
 </script>
