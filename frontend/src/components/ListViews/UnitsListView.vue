@@ -31,6 +31,8 @@
       class="mx-3 sm:mx-5"
       :rows="rows"
       doctype="Units"
+    >
+      <ListRowItem :item="item" :align="column.align" class="overflow-hidden">
         <template #default="{ label }">
           <div
             v-if="['modified', 'creation'].includes(column.key)"
@@ -100,6 +102,7 @@
     ref="listBulkActionsRef"
     v-model="list"
     doctype="Units"
+  />
 </template>
 
 <script setup>
