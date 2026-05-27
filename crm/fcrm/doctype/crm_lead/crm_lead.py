@@ -119,14 +119,30 @@ class CRMLead(Document):
 		for row in self.get("seller_units") or []:
 			unit_title = (row.get("unit_title") or "").strip()
 			project = row.get("project")
-			if not unit_title or not project or unit_title in processed:
+			if not unit_title:
+				continue
+			if unit_title in processed:
+				continue
+			if not project:
 				continue
 
 			processed.add(unit_title)
-			unit_name = frappe.db.get_value(units_doctype, {"title": unit_title}, "name")
+			unit_record = frappe.get_all(
+				units_doctype,
+				filters={"title": unit_title},
+				fields=["name", "project"],
+				limit=1,
+			)
+			existing_unit = unit_record[0] if unit_record else None
+			if existing_unit:
+				unit_name = existing_unit.name
+				current_project = existing_unit.project
+			else:
+				unit_name = None
+				current_project = None
 			if unit_name:
-				unit = frappe.get_doc(units_doctype, unit_name)
-				if unit.get("project") != project:
+				if current_project != project:
+					unit = frappe.get_doc(units_doctype, unit_name)
 					unit.project = project
 					unit.save(ignore_permissions=True)
 				continue
