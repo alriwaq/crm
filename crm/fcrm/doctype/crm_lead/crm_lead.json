@@ -34,12 +34,14 @@
   "phone",
   "column_break_dbsv",
   "status",
+  "lead_type",
   "no_of_employees",
   "annual_revenue",
   "image",
   "converted",
   "projects_tab",
   "projects",
+  "seller_units",
   "section_break_ggwh",
   "total",
   "column_break_uisv",
@@ -117,6 +119,15 @@
    "options": "CRM Lead Status",
    "reqd": 1,
    "search_index": 1
+  },
+  {
+   "default": "Buyer",
+   "fieldname": "lead_type",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Lead Type",
+   "options": "Buyer\nSeller",
+   "reqd": 1
   },
   {
    "fieldname": "email",
@@ -320,6 +331,13 @@
    "fieldtype": "Table",
    "label": "Projects",
    "options": "CRM Projects"
+  },
+  {
+   "depends_on": "eval:doc.lead_type==\"Seller\"",
+   "fieldname": "seller_units",
+   "fieldtype": "Table",
+   "label": "Units",
+   "options": "CRM Lead Units"
   },
   {
    "fieldname": "section_break_ggwh",

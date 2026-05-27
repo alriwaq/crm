@@ -26,6 +26,7 @@ class CRMLead(Document):
 		from frappe.types import DF
 
 		from crm.fcrm.doctype.crm_projects.crm_projects import CRMProjects
+		from crm.fcrm.doctype.crm_lead_units.crm_lead_units import CRMLeadUnits
 		from crm.fcrm.doctype.crm_rolling_response_time.crm_rolling_response_time import (
 			CRMRollingResponseTime,
 		)
@@ -49,6 +50,7 @@ class CRMLead(Document):
 		last_response_time: DF.Duration | None
 		lead_name: DF.Data | None
 		lead_owner: DF.Link | None
+		lead_type: DF.Literal["Buyer", "Seller"]
 		lost_notes: DF.Text | None
 		lost_reason: DF.Link | None
 		middle_name: DF.Data | None
@@ -62,6 +64,7 @@ class CRMLead(Document):
 		response_by: DF.Datetime | None
 		rolling_responses: DF.Table[CRMRollingResponseTime]
 		salutation: DF.Link | None
+		seller_units: DF.Table[CRMLeadUnits]
 		sla: DF.Link | None
 		sla_creation: DF.Datetime | None
 		sla_status: DF.Literal["", "First Response Due", "Rolling Response Due", "Failed", "Fulfilled"]
@@ -98,12 +101,59 @@ class CRMLead(Document):
 	def before_save(self):
 		self.apply_sla()
 		self.fill_project_rates()
+		self.sync_seller_units()
 
 	def fill_project_rates(self):
 		"""Auto-populate rate from CRM Project.standard_rate when rate is missing."""
 		for row in self.get("projects") or []:
 			if row.project_code and not row.rate:
 				row.rate = frappe.db.get_value("CRM Project", row.project_code, "standard_rate") or 0
+
+	def sync_seller_units(self):
+		if self.get("lead_type") != "Seller":
+			return
+
+		units_doctype = _get_units_doctype()
+		processed = set()
+
+		for row in self.get("seller_units") or []:
+			unit_title = (row.get("unit_title") or "").strip()
+			project = row.get("project")
+			if not unit_title:
+				continue
+			if unit_title in processed:
+				continue
+			if not project:
+				continue
+
+			processed.add(unit_title)
+			unit_record = frappe.get_all(
+				units_doctype,
+				filters={"title": unit_title},
+				fields=["name", "project"],
+				limit=1,
+			)
+			existing_unit = unit_record[0] if unit_record else None
+			if existing_unit:
+				unit_name = existing_unit.name
+				current_project = existing_unit.project
+			else:
+				unit_name = None
+				current_project = None
+			if unit_name:
+				if current_project != project:
+					unit = frappe.get_doc(units_doctype, unit_name)
+					unit.project = project
+					unit.save(ignore_permissions=True)
+				continue
+
+			frappe.get_doc(
+				{
+					"doctype": units_doctype,
+					"title": unit_title,
+					"project": project,
+				}
+			).insert(ignore_permissions=True)
 
 	def validate_status(self):
 		if self.is_new() and not self.status:
@@ -522,3 +572,9 @@ def convert_to_deal(
 	organization = lead.create_organization(existing_organization)
 	_deal = lead.create_deal(contact, organization, deal)
 	return _deal
+
+
+def _get_units_doctype():
+	if frappe.db.exists("DocType", "Units"):
+		return "Units"
+	return "CRM Unit"

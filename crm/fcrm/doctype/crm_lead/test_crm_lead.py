@@ -4,7 +4,7 @@
 import frappe
 from frappe.tests import IntegrationTestCase
 
-from crm.fcrm.doctype.crm_lead.crm_lead import convert_to_deal
+from crm.fcrm.doctype.crm_lead.crm_lead import _get_units_doctype, convert_to_deal
 
 
 class TestCRMLead(IntegrationTestCase):
@@ -507,9 +507,61 @@ class TestCRMLead(IntegrationTestCase):
 		self.assertIn("Administrator", deal_assignees)
 		self.assertIn("crm.user1@example.com", deal_assignees)
 
+	def test_seller_lead_creates_multiple_units_and_links_to_project(self):
+		project = create_project()
+		units_doctype = _get_units_doctype()
+		lead = create_lead(
+			first_name="Seller",
+			email="seller.units@example.com",
+			lead_type="Seller",
+			seller_units=[
+				{"project": project.name, "unit_title": "Tower A - 101"},
+				{"project": project.name, "unit_title": "Tower A - 102"},
+			],
+		)
+
+		units = frappe.get_all(
+			units_doctype,
+			filters={"title": ["in", ["Tower A - 101", "Tower A - 102"]]},
+			fields=["name", "title", "project"],
+		)
+		self.assertEqual(len(units), 2)
+		self.assertTrue(all(unit.project == project.name for unit in units))
+
+		project.reload()
+		project_units = {row.unit for row in project.units}
+		self.assertTrue({unit.name for unit in units}.issubset(project_units))
+
+	def test_seller_lead_updates_existing_unit_project(self):
+		project_a = create_project()
+		project_b = create_project()
+		units_doctype = _get_units_doctype()
+		unit = frappe.get_doc(
+			{"doctype": units_doctype, "title": "Transfer Unit 901", "project": project_a.name}
+		).insert(ignore_permissions=True)
+
+		create_lead(
+			first_name="Seller",
+			email="seller.transfer@example.com",
+			lead_type="Seller",
+			seller_units=[{"project": project_b.name, "unit_title": unit.title}],
+		)
+
+		unit.reload()
+		self.assertEqual(unit.project, project_b.name)
+
 
 def create_lead(**kwargs):
 	"""Helper function to create a CRM Lead for testing"""
 	data = {"doctype": "CRM Lead"}
 	data.update(kwargs)
 	return frappe.get_doc(data).insert()
+
+
+def create_project():
+	return frappe.get_doc(
+		{
+			"doctype": "CRM Project",
+			"project_code": frappe.generate_hash(length=8),
+		}
+	).insert(ignore_permissions=True)
